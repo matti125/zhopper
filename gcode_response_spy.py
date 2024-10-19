@@ -52,9 +52,10 @@ async def listen_for_responses(websocket, exit_event):
             response = await websocket.recv()
             data = json.loads(response)
             if data.get("method") == "notify_gcode_response":
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Generate the current timestamp
                 gcode_response = data.get("params", [])[0]
+                print(f"{timestamp} {gcode_response}", flush=True)  # Prepend timestamp to response
                 debug_print(f"Received response: {gcode_response}")
-                print(gcode_response, flush=True)
     except asyncio.CancelledError:
         # Handle the task being cancelled gracefully
         debug_print("Response listening task was cancelled.")
@@ -70,7 +71,6 @@ async def listen_and_send_gcode(host, timeout=None):
     uri = f"ws://{resolved_host}/websocket"
 
     exit_event = asyncio.Event()
-    last_command_time = None  # Track the last time a command was sent
 
     def handle_exit_signal(signum, frame):
         debug_print("Exit signal received, setting exit event.")
@@ -90,22 +90,22 @@ async def listen_and_send_gcode(host, timeout=None):
         # Start listening for responses in the background
         response_task = asyncio.create_task(listen_for_responses(websocket, exit_event))
 
-        # Read G-code commands from standard input
-        for gcode_command in sys.stdin:
-            gcode_command = gcode_command.strip()
+        # Read and send one line of G-code at a time
+        for line in sys.stdin:
+            gcode_command = line.strip()
             if gcode_command:
                 await send_gcode(websocket, gcode_command)
-                last_command_time = datetime.now()  # Update the last command time
+                # After sending the G-code, wait for the response before reading the next line
+                await asyncio.sleep(0.1)  # Small delay to ensure response is handled
 
-        # If timeout is specified, handle timeout-based exit
-        if timeout is not None and last_command_time:
-            while (datetime.now() - last_command_time) < timedelta(seconds=timeout):
-                await asyncio.sleep(1)
-            debug_print(f"No input or response in {timeout} seconds, exiting.")
+        # If a timeout is specified, exit after the specified timeout
+        if timeout is not None:
+            await asyncio.sleep(timeout)
+            debug_print(f"Timeout of {timeout} seconds reached, exiting.")
         else:
             debug_print("Listening indefinitely until interrupted...")
 
-        # Wait indefinitely if no timeout is provided
+        # Wait for the exit event if no timeout is provided
         await exit_event.wait()
 
         # Cancel the response listening task
@@ -113,7 +113,7 @@ async def listen_and_send_gcode(host, timeout=None):
         await response_task
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Send G-code commands to Moonraker from stdin, wait for responses, and exit after a timeout (optional).")
+    parser = argparse.ArgumentParser(description="Send G-code commands to Moonraker from stdin, one line at a time, wait for responses, and exit after a timeout (optional).")
     parser.add_argument("--host", required=True, help="Hostname or IP address of the Moonraker server.")
     parser.add_argument("--timeout", type=int, help="Timeout in seconds to wait after the last command before exiting. If not provided, listen indefinitely.")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output for debugging.")
