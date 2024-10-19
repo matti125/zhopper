@@ -33,5 +33,13 @@ Check results in influxdb
 ## Logging temperatures:
 
 ```
-./templogger.py --obj extruder heater_bed --host ratos2.local --measurement ratos2|./summarizer.py --interval 30|./humanread.py
+./templogger.py --sensors beacon_coil --heaters heater_bed --host ratos2.local --measurement tt |./summarizer.py --interval 30|./humanread.py
+```
+
+## Following the distance of beacon probe:
+```while true; do echo beacon_query; sleep 5; done|./gcode_response_spy.py --host ratos2.local |tee ./out/beacon_query.log| ./convert_beacon_query_to_influx.py --result-header "// Last reading:" --measurement gantry|./influx_write_by_line.py --bucket r3 --verbose```
+
+##quick start for loggind temp and distance: 
+```
+./log_temp_and_beacon.sh&
 ```
