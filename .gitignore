@@ -1,2 +1,6 @@
 .venv
 z.gcode
+build
+dist
+out
+pids.txt
