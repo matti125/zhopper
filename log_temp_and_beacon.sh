@@ -7,7 +7,8 @@ export INTERVAL=${INTERVAL:-5}            # Default interval: 5 seconds
 export MEASUREMENT=${MEASUREMENT:-"gantry"}  # Default measurement name: gantry
 export BUCKET=${BUCKET:-"r3"}             # Default InfluxDB bucket: r3
 export TEMPERATURE_LOG=${TEMPERATURE_LOG:-"./out/temperature.log"}
-export BEACON_LOG=${BEACON_LOG:-"./out/beacon.log"}
+export BEACON_LOG=${BEACON_LOG:-"./out/beacon_query.log"}
+export TAG=${TAG:-"case=stock,flow_direction=stock"} 
 
 # Start background jobs and store their PIDs
 ./log_beacon_distance.sh &  # Start log_beacon_distance.sh in the background

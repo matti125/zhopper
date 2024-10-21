@@ -52,7 +52,7 @@ def process_line(line, *, result_header, measurement, tag=None):
                 key = "temperature"
                 value = float(item.replace("C", "").strip())
             elif "mm" in item:
-                key = "measurement"
+                key = "distance"
                 value = float(item.replace("mm", "").strip())
             else:
                 debug_print(f"Skipping unrecognized data: {item}")
