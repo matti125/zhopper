@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-SENSORS=${SENSORS:-"EBB42_v1.2_T0 beacon_coil"}      # Default sensor: chamber
+SENSORS=${SENSORS:-"EBB42_v1.2_T0 beacon_coil heatsink chamber"}      # Default sensor: chamber
 HEATERS=${HEATERS:-"extruder heater_bed"}     # Default heater: extruder
 HOST=${HOST:-"ratos2.local"}        # Default host: ratos.local
 INTERVAL=${INTERVAL:-5}            # Default interval: 5 seconds
