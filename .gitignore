@@ -4,3 +4,5 @@ build
 dist
 out
 pids.txt
+testconfig.influx
+nohup.out
