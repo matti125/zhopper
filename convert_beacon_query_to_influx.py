@@ -52,6 +52,9 @@ def process_line(line, *, result_header, measurement, tag=None):
                 key = "temperature"
                 value = float(item.replace("C", "").strip())
             elif "mm" in item:
+                if "infmm" in item:  # Skip the distance if it's "infmm"
+                    debug_print(f"Skipping infinite distance: {item}")
+                    continue
                 key = "distance"
                 value = float(item.replace("mm", "").strip())
             else:
@@ -64,6 +67,10 @@ def process_line(line, *, result_header, measurement, tag=None):
 
     # Prepare InfluxDB line protocol
     fields = ",".join([f"{key}={value}" for key, value in data_dict.items()])
+    
+    if not fields:
+        debug_print(f"No valid data to process in line: {line}")
+        return None
     
     # Add tag if provided
     tag_part = f",{tag}" if tag else ""
