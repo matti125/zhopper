@@ -22,13 +22,11 @@ def handle_signal(signum, frame):
     debug_print(f"Received signal {signum}, stopping gracefully...")
     stop_processing = True
 
-# Parse command-line arguments for the bucket name, config file, config profile, and verbose mode
+# Parse command-line arguments for the bucket name, config file, and verbose mode
 parser = argparse.ArgumentParser(description="Send line protocol data to InfluxDB")
 parser.add_argument('--bucket', required=True, help='The InfluxDB bucket to write data to')
 parser.add_argument('--config-file', default=os.path.expanduser('~/.influxdbv2/configs'),
                     help='Path to the INI config file (default: ~/.influxdbv2/configs)')
-parser.add_argument('--config-name', default='onboarding', 
-                    help='Configuration profile name in the INI file (default: onboarding)')
 parser.add_argument('--verbose', action='store_true', default=False, help='Enable verbose output for debugging')
 args = parser.parse_args()
 
@@ -38,22 +36,31 @@ def strip_quotes(value):
         return value[1:-1]
     return value
 
-# Get the config file and config profile from the command-line argument or default values
+# Get the config file from the command-line argument or default value
 config_file_path = args.config_file
-config_name = args.config_name
 
 # Initialize the configparser and read the INI file
 config = configparser.ConfigParser()
 config.read(config_file_path)
 
-# Check if the configuration profile exists
-if config_name in config:
-    url = strip_quotes(config[config_name].get("url"))
-    token = strip_quotes(config[config_name].get("token"))
-    org = strip_quotes(config[config_name].get("org"))
-    debug_print(f"Using configuration '{config_name}' from {config_file_path}")
-else:
-    raise ValueError(f"Configuration '{config_name}' not found in {config_file_path}")
+# Function to find the active configuration
+def find_active_config(config):
+    for section in config.sections():
+        if config[section].get("active", "false").lower() == "true":
+            return section
+    return None
+
+# Find the active configuration
+active_config = find_active_config(config)
+
+if active_config is None:
+    raise ValueError(f"No active configuration found in {config_file_path}")
+
+# Extract URL, token, and org from the active configuration
+url = strip_quotes(config[active_config].get("url"))
+token = strip_quotes(config[active_config].get("token"))
+org = strip_quotes(config[active_config].get("org"))
+debug_print(f"Using active configuration '{active_config}' from {config_file_path}")
 
 # Get the bucket from the command-line argument
 bucket = args.bucket
