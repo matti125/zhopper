@@ -4,6 +4,21 @@ Provides tools to create a test file that the user will print, and the tools to 
 
 Also adds tools to monitor temperature data, summarize and present in human-consumable format. Human consumption is not the main target, but instead to produce data in line format of csv format.
 
+## writing to influxdb
+You need to have a token, url and the "org" for the influxdb, and you need to place those in the `~/.influxdbv2/configs`. The following is just an exapmle, and you obvoisly have to provide your own url, token and org.
+cat ~/.influxdbv2/configs
+[gantry]
+  url = "https://eu-central-1-1.aws.cloud2.influxdata.com"
+  token = "rP4fUzqF5Fy-795Gakoslkdjfg=="
+  org = "6f331844e7d605488"
+  active = true
+
+## log files
+The folder where the log files will be stored needs to exist (note to self: fix)
+
+## all at once monitoring
+To monitor temperatures and static distance, run `log_temp_and_distance.sh`
+Modify 
 ## Checking the z accuracy 
 terminal 1:
 Create probe test gcode file, z.gcode
