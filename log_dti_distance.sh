@@ -12,7 +12,7 @@ TAG=${TAG:-"printer=unknown,case=unknown"}           # Default InfluxDB tags
 
 
 # Start the loop to send the beacon query and process the responses
-$DTI_READER --json --connection bt --device "$DTI_ADDR" | \
+$DTI_READER --json --connection bt --device "$DTI_ADDR"  --deadman 3| \
  ./convert_json_to_influx.py --measurement "$MEASUREMENT" --tag "$TAG" --include displacement --map displacement dti_displacement | \
   tee -a "$DTI_LOG" | \
   ./influx_write_by_line.py --bucket "$BUCKET"

@@ -8,7 +8,7 @@ export MEASUREMENT=${MEASUREMENT:-"gantry"}  # Default measurement name: gantry
 export BUCKET=${BUCKET:-"gantry"}             # Default InfluxDB bucket: r3
 export TEMPERATURE_LOG=${TEMPERATURE_LOG:-"./out/temperature.log"}
 export BEACON_LOG=${BEACON_LOG:-"./out/beacon_query.log"}
-export TAG=${TAG:-"printer=mazas-2,housing=plenum,flow_direction=stock"} 
+export TAG=${TAG:-"dbid=12cc60bcd33680eb8a62ee1e521200f7,run=$1"} 
 
 # Start background jobs and store their PIDs
 ./log_beacon_distance.sh &  # Start log_beacon_distance.sh in the background

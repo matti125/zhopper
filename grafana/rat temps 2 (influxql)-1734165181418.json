@@ -1,0 +1,1201 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_GANTRY_INFLUX SQL",
+      "label": "gantry influx SQL",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "influxdb",
+      "pluginName": "InfluxDB"
+    },
+    {
+      "name": "DS_GANTRY-INFLUXQL",
+      "label": "gantry-influxql",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "influxdb",
+      "pluginName": "InfluxDB"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.4.0-79828"
+    },
+    {
+      "type": "datasource",
+      "id": "influxdb",
+      "name": "InfluxDB",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_GANTRY_INFLUX SQL}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "11.4.0-79828",
+      "targets": [
+        {
+          "dataset": "iox",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_GANTRY_INFLUX SQL}"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT RUN, MIN(time) AS time\nFROM \"gantry\"\nWHERE \"time\" >= $__timeFrom AND \"time\" <= $__timeTo\nGROUP BY RUN\nORDER BY time ASC\nLIMIT 5",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          },
+          "table": "gantry"
+        }
+      ],
+      "title": "Test Runs Included",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_GANTRY_INFLUX SQL}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "lengthmm"
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "avg(beacon_change)",
+                  "avg(dti_change)"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.4.0-79828",
+      "targets": [
+        {
+          "dataset": "iox",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_GANTRY_INFLUX SQL}"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n    \"time\",\n    \"distance\" AS distance_raw,\n    \"dti_displacement\" AS dti_displacement_raw,\n    (\"distance\" - $beacon_avg_pre_heat) AS beacon_change,\n    (\"dti_displacement\" - $dti_avg_pre_heat) AS dti_change\n\nFROM \n    \"gantry\"\nWHERE \n    \"time\" >= $__timeFrom\n    AND \"time\" <= $__timeTo\nORDER BY \n    \"time\";",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "time",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "distance",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "dti_displacement",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          },
+          "table": "gantry"
+        },
+        {
+          "dataset": "iox",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_GANTRY_INFLUX SQL}"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH initial_values AS (\n    SELECT \n        FIRST_VALUE(\"dti_displacement\" IGNORE NULLS) OVER (ORDER BY \"time\" ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS initial_dti,\n        FIRST_VALUE(\"distance\" IGNORE NULLS) OVER (ORDER BY \"time\" ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS initial_distance\n    FROM \n        \"gantry\"\n    WHERE \n        \"time\" >= $__timeFrom\n        AND \"time\" <= $__timeTo\n    LIMIT 1\n)\n\nSELECT\n    \"time\",\n    \"distance\" AS distance_raw,\n    \"dti_displacement\" AS dti_displacement_raw,\n    initial_values.initial_distance,\n    initial_values.initial_dti,\n    \n    -- Filled and adjusted distance\n    COALESCE(\n        LAST_VALUE(\"distance\" IGNORE NULLS) OVER (\n            ORDER BY \"time\" ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n        ),\n        initial_values.initial_distance\n   -- ) - (initial_values.initial_distance - initial_values.initial_dti) AS distance,\n    ) AS distance,\n\n    -- Filled dti_displacement (no adjustment needed)\n    LAST_VALUE(\"dti_displacement\" IGNORE NULLS) OVER (\n        ORDER BY \"time\" ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS dti_displacement\n\nFROM \n    \"gantry\", initial_values\nWHERE \n    \"time\" >= $__timeFrom\n    AND \"time\" <= $__timeTo\nORDER BY \n    \"time\";",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          }
+        },
+        {
+          "dataset": "iox",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_GANTRY_INFLUX SQL}"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  \"time\",\n  distance as distance_raw,\n  dti_displacement as dti_displacement_raw,\n     COALESCE(\n        LAST_VALUE(\"distance\" IGNORE NULLS) OVER (\n            ORDER BY \"time\" ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n        ),\n        LAST_VALUE(\"distance\" IGNORE NULLS) OVER (\n            ORDER BY \"time\" DESC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n        )\n    ) AS distance,\n--  LAST_VALUE(\"distance\" IGNORE NULLS ) OVER (\n--      ORDER BY \"time\" ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n--    ) as distance,\n  LAST_VALUE(\"dti_displacement\" IGNORE NULLS ) OVER (\n      ORDER BY \"time\" ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) as dti_displacement\nFROM\n  \"gantry\"\nWHERE\n  \"time\" >= $__timeFrom\n  AND \"time\" <= $__timeTo\nORDER BY \"time\";",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          }
+        }
+      ],
+      "title": "Deflection",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "avg(beacon_change)",
+            "mode": "windowFunctions",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "window": {
+              "field": "beacon_change",
+              "reducer": "mean",
+              "windowAlignment": "centered",
+              "windowSize": 100,
+              "windowSizeMode": "fixed"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "avg(dti_change)",
+            "mode": "windowFunctions",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "window": {
+              "field": "dti_change",
+              "reducer": "mean",
+              "windowAlignment": "centered",
+              "windowSize": 100,
+              "windowSizeMode": "fixed"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_GANTRY-INFLUXQL}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/extruder_pwm/"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.4.0-79828",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_GANTRY-INFLUXQL}"
+          },
+          "groupBy": [],
+          "measurement": "gantry",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT RUN, MIN(time) AS time FROM \"gantry\"\nWHERE \"time\" >= $__timeFrom AND \"time\" <= $__timeTo\nGROUP BY RUN\nORDER BY time ASC\nLIMIT 5",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "extruder_target"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "extruder_temp",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_GANTRY-INFLUXQL}"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "gantry",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "extruder_temp"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "extruder_pwm",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_GANTRY-INFLUXQL}"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "gantry",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "extruder_pwm"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Heatblock",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "windowFunctions",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "window": {
+              "field": "extruder_pwm",
+              "reducer": "mean",
+              "windowAlignment": "centered",
+              "windowSize": 50,
+              "windowSizeMode": "fixed"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_GANTRY-INFLUXQL}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "heatsink_g - chamber"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.spanNulls",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "gantry_mid - chamber"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.spanNulls",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "beacon_coil - chamber"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.spanNulls",
+                "value": true
+              }
+            ]
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "beacon_coil - chamber",
+                  "gantry_mid - chamber",
+                  "heatsink_g - chamber",
+                  "chamber",
+                  "heater_bed_temp"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.4.0-79828",
+      "targets": [
+        {
+          "alias": "chamber",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_GANTRY-INFLUXQL}"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "gantry",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "chamber"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "heatsink_g",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_GANTRY-INFLUXQL}"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "gantry",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "heatsink_g"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "gantry_left",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_GANTRY-INFLUXQL}"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "gantry",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "gantry_left"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "gantry_mid",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_GANTRY-INFLUXQL}"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "gantry",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "gantry_mid"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "heater_bed_temp",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_GANTRY-INFLUXQL}"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "gantry",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "heater_bed_temp"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "beacon_coil",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_GANTRY-INFLUXQL}"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "gantry",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "F",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "beacon_coil"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Temperature",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "binary": {
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "heatsink_g"
+                }
+              },
+              "operator": "-",
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "chamber"
+                }
+              }
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "binary": {
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gantry_mid"
+                }
+              },
+              "operator": "-",
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "chamber"
+                }
+              }
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "binary": {
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "beacon_coil"
+                }
+              },
+              "operator": "-",
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "chamber"
+                }
+              }
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 40,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": {
+          "type": "influxdb",
+          "uid": "${DS_GANTRY_INFLUX SQL}"
+        },
+        "definition": "Select ts from \n  ( \n    (\n      SELECT time, time::STRING as ts \n      FROM \"gantry\" \n      WHERE \"time\" >= $__timeFrom \n        AND \"time\" <= $__timeTo \n        and extruder_target >1 \n      order by time \n      limit 1\n    )\n    UNION ALL\n    (\n     SELECT 0::TIMESTAMP as time, '${__from:date:iso}' as ts\n    )\n   UNION ALL\n    (\n     SELECT 0::TIMESTAMP as time, '${__to:date:iso}' as ts\n    )\n )",
+        "name": "distance_avg_zero",
+        "options": [],
+        "query": {
+          "query": "Select ts from \n  ( \n    (\n      SELECT time, time::STRING as ts \n      FROM \"gantry\" \n      WHERE \"time\" >= $__timeFrom \n        AND \"time\" <= $__timeTo \n        and extruder_target >1 \n      order by time \n      limit 1\n    )\n    UNION ALL\n    (\n     SELECT 0::TIMESTAMP as time, '${__from:date:iso}' as ts\n    )\n   UNION ALL\n    (\n     SELECT 0::TIMESTAMP as time, '${__to:date:iso}' as ts\n    )\n )",
+          "refId": "InfluxVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "influxdb",
+          "uid": "${DS_GANTRY_INFLUX SQL}"
+        },
+        "definition": "SELECT AVG(distance) AS average_distance\nFROM \"gantry\"\nWHERE \"time\" >= TO_TIMESTAMP('$distance_avg_zero') - INTERVAL '1 MINUTE'\n  AND \"time\" < TO_TIMESTAMP('$distance_avg_zero')\n  AND distance IS NOT NULL",
+        "hide": 2,
+        "name": "beacon_avg_pre_heat",
+        "options": [],
+        "query": {
+          "query": "SELECT AVG(distance) AS average_distance\nFROM \"gantry\"\nWHERE \"time\" >= TO_TIMESTAMP('$distance_avg_zero') - INTERVAL '1 MINUTE'\n  AND \"time\" < TO_TIMESTAMP('$distance_avg_zero')\n  AND distance IS NOT NULL",
+          "refId": "InfluxVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "influxdb",
+          "uid": "${DS_GANTRY_INFLUX SQL}"
+        },
+        "definition": "SELECT AVG(dti_displacement) AS average_distance\nFROM \"gantry\"\nWHERE \"time\" >= TO_TIMESTAMP('$distance_avg_zero') - INTERVAL '1 MINUTE'\n  AND \"time\" < TO_TIMESTAMP('$distance_avg_zero')\n  AND dti_displacement IS NOT NULL",
+        "hide": 2,
+        "name": "dti_avg_pre_heat",
+        "options": [],
+        "query": {
+          "query": "SELECT AVG(dti_displacement) AS average_distance\nFROM \"gantry\"\nWHERE \"time\" >= TO_TIMESTAMP('$distance_avg_zero') - INTERVAL '1 MINUTE'\n  AND \"time\" < TO_TIMESTAMP('$distance_avg_zero')\n  AND dti_displacement IS NOT NULL",
+          "refId": "InfluxVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "2024-12-14T08:02:35.000Z",
+    "to": "2024-12-14T08:33:35.000Z"
+  },
+  "timepicker": {},
+  "timezone": "utc",
+  "title": "rat temps 2 (influxql)",
+  "uid": "fe3il34jdq41se",
+  "version": 31,
+  "weekStart": ""
+}

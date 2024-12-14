@@ -16,4 +16,3 @@ done | ./gcode_response_spy.py --host "$HOST" | \
     ./convert_beacon_query_to_influx.py --result-header "// Last reading:" --measurement "$MEASUREMENT" --tag "$TAG" | \
     tee -a "$BEACON_LOG" | \
     ./influx_write_by_line.py --bucket "$BUCKET"
-cat
